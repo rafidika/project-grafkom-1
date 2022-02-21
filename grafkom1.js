@@ -6,11 +6,28 @@ function main() {
   var vertexClicked = null
   var vertexes = []
 
-  // console.log(canvasLeft)
-  // console.log(canvasTop)
-
   console.log(canvas.height)
 
+
+  /*Click Listeners*/
+
+  var drawOrEditInput = document.querySelector("#drawOrEdit");
+
+  drawOrEditInput.addEventListener('change', (event) => {
+    if (drawOrEditInput.value === "edit"){
+      canvas.addEventListener('click', editClickHandler)
+
+      canvas.addEventListener('mousemove', editMouseMoveHandler)
+    }
+    else if (drawOrEditInput.value === "draw")
+      {
+      canvas.removeEventListener('click', editClickHandler)
+
+      canvas.removeEventListener('mousemove', editMouseMoveHandler)
+    }
+  })
+
+  
   canvas.addEventListener('click', editClickHandler)
 
   canvas.addEventListener('mousemove', editMouseMoveHandler)
@@ -76,7 +93,7 @@ function main() {
   drawScene(drawArrayCount)
 
   function editClickHandler(event){
-    const vertexSize = 10
+    const vertexSize = 30
     var x = event.pageX - canvasLeft
     var y = event.pageY - canvasTop
 // 
