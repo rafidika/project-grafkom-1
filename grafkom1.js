@@ -3,18 +3,17 @@ function main() {
   var canvas = document.querySelector("#c");
   var canvasLeft = canvas.offsetLeft + canvas.clientLeft
   var canvasTop = canvas.offsetTop + canvas.clientTop
+  var vertexClicked = null
+  var vertexes = []
 
   // console.log(canvasLeft)
   // console.log(canvasTop)
 
   console.log(canvas.height)
 
-  canvas.addEventListener('click', (event) => {
-    var x = event.pageX - canvasLeft
-    var y = event.pageY - canvasTop
+  canvas.addEventListener('click', editClickHandler)
 
-    console.log(`X: ${x}, Y: ${y}`)
-  })
+  canvas.addEventListener('mousemove', editMouseMoveHandler)
 
   var gl = canvas.getContext("webgl");
   if (!gl) {
@@ -59,7 +58,7 @@ function main() {
   //   600, 400, 
   // ]
 
-    var vertexes = [
+    vertexes = [
     {x: 200, y: 400},
     {x: 200, y: 200},
     {x: 400, y: 100},
@@ -68,14 +67,59 @@ function main() {
   ];
 
 
-  polygonVertexes = polygonVertex(vertexes)
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
+  applyVertex() 
 
   gl.useProgram(program);
   gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
 
   drawArrayCount = polygonVertexes.length/2
   drawScene(drawArrayCount)
+
+  function editClickHandler(event){
+    const vertexSize = 10
+    var x = event.pageX - canvasLeft
+    var y = event.pageY - canvasTop
+// 
+//     console.log(`X: ${x}, Y: ${y}`)
+//     console.log(vertexClicked)
+//     console.log(vertexes)
+
+    
+    if (vertexClicked === null){
+      var found = false
+      vertexes.forEach(function(vertex) {
+          if (y > vertex.y - vertexSize/2  && y < vertex.y + vertexSize /2
+              && x > vertex.x - vertexSize/2 && x < vertex.x + vertexSize/2) {
+              // alert('clicked an element');
+              vertexClicked = vertex
+              found = true
+          }
+      });
+
+      if (found === false){
+        vertexClicked = null
+      }
+    }
+    else 
+    {
+        vertexClicked.x = x
+        vertexClicked.y = y
+        updateVertex()
+        drawScene()
+        vertexClicked = null 
+    }
+  }
+
+  function editMouseMoveHandler(event) {
+    var x = event.pageX - canvasLeft
+    var y = event.pageY - canvasTop
+    if (vertexClicked !== null){
+        vertexClicked.x = x
+        vertexClicked.y = y
+        updateVertex()
+        drawScene()
+    }
+  }
 
   function createShader(gl, type, source) {
     var shader = gl.createShader(type);
@@ -106,11 +150,19 @@ function main() {
     gl.deleteProgram(program);
   }
 
+  function applyVertex(){
+    polygonVertexes = polygonVertex(vertexes)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
+  }
 
+  function updateVertex(){
+    polygonVertexes = polygonVertex(vertexes)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
+  }
 
 
   //***Rendering***//
-  function drawScene(drawArrayCount) {
+  function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
