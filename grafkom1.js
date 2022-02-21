@@ -53,11 +53,20 @@ function main() {
 //     vertexes[i] = vertexes[i]*30
 //   }
 
-  var vertexes = [
-    200, 400,
-    400, 100,
-    600, 400, 
-  ]
+  // var vertexes = [
+  //   200, 400,
+  //   400, 100,
+  //   600, 400, 
+  // ]
+
+    var vertexes = [
+    {x: 200, y: 400},
+    {x: 200, y: 200},
+    {x: 400, y: 100},
+    {x: 600, y: 200},
+    {x: 600, y: 400},
+  ];
+
 
   polygonVertexes = polygonVertex(vertexes)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
@@ -67,10 +76,6 @@ function main() {
 
   drawArrayCount = polygonVertexes.length/2
   drawScene(drawArrayCount)
-
-
-  
-
 
   function createShader(gl, type, source) {
     var shader = gl.createShader(type);
@@ -137,34 +142,58 @@ function main() {
   }
 }
 
-function polygonVertex(vertexes2D) {
-  if (vertexes2D.length <= 4){
-    return [];
-  }
+// function polygonVertex(vertexes2D) {
+//   if (vertexes2D.length <= 4){
+//     return [];
+//   }
+// 
+//   if (vertexes2D.length % 2 != 0){
+//     return [];
+//   }
+// 
+// 
+//   const polygonVertex = [];
+// 
+//   const firstVertex = [vertexes2D[0], vertexes2D[1]];
+// 
+//   for (var i = 4; i < vertexes2D.length; i = i+2) {
+// 
+//     polygonVertex.push(firstVertex[0], firstVertex[1])
+//     polygonVertex.push(vertexes2D[i-2], vertexes2D[i-1])
+//     polygonVertex.push(vertexes2D[i], vertexes2D[i+1])
+//   }
+// 
+//   console.log(polygonVertex)
+//   return polygonVertex
+// 
+// }
 
-  if (vertexes2D.length % 2 != 0){
+
+function polygonVertex(vertexes2D) {
+  /*
+  vertexes2D: Array of Vertexes
+  Vertexes = objects with x & y attributes
+  */
+  if (vertexes2D.length <= 2){
     return [];
   }
 
 
   const polygonVertex = [];
 
-  const firstVertex = [vertexes2D[0], vertexes2D[1]];
+  const firstVertex = vertexes2D[0];
 
-  for (var i = 4; i < vertexes2D.length; i = i+2) {
 
-    polygonVertex.push(firstVertex[0], firstVertex[1])
-    polygonVertex.push(vertexes2D[i-2], vertexes2D[i-1])
-    polygonVertex.push(vertexes2D[i], vertexes2D[i+1])
+
+
+  for (var i = 2; i < vertexes2D.length; i++) {
+
+    polygonVertex.push(firstVertex.x, firstVertex.y)
+    polygonVertex.push(vertexes2D[i-1].x, vertexes2D[i-1].y)
+    polygonVertex.push(vertexes2D[i].x, vertexes2D[i].y)
   }
 
-  console.log(polygonVertex)
   return polygonVertex
-
 }
 
-
-
-window.addEventListener('load', function () {
-  main();
-})
+main()
