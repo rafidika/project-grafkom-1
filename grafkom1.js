@@ -34,29 +34,42 @@ function main() {
 
   // Assign locations
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+  var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
 
   // Create buffer 
   var positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   // Fill up geometry
-  var vertexes = [
-    0, 0,
-    0, 0.5,
-    0.35, 0.7,
-    0.7, 0.5,
-    0.7, 0,
+//   var vertexes = [
+//     0, 0,
+//     0, 0.5,
+//     0.35, 0.7,
+//     0.7, 0.5,
+//     0.7, 0,
+//   ];
+// 
+//   for (var i = 0; i < vertexes.length; i++) {
+//     vertexes[i] = vertexes[i]*30
+//   }
 
-    
-  ];
+  var vertexes = [
+    200, 400,
+    400, 100,
+    600, 400, 
+  ]
+
   polygonVertexes = polygonVertex(vertexes)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
+
+  gl.useProgram(program);
+  gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
 
   drawArrayCount = polygonVertexes.length/2
   drawScene(drawArrayCount)
 
 
-
+  
 
 
   function createShader(gl, type, source) {
@@ -150,4 +163,8 @@ function polygonVertex(vertexes2D) {
 
 }
 
-main();
+
+
+window.addEventListener('load', function () {
+  main();
+})

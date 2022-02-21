@@ -1,15 +1,15 @@
- <canvas id="c" style="
+ <canvas id="c" width="800" height="500" style="
   border: 5px solid black;
-  height: 500px;
-  width: 800px;
   margin: 0;
  "></canvas>
 
  <script id="vertex-shader-2d" type="notjs">
  
-  // an attribute will receive data from a buffer
+  // an attribute will receive data from a buffer, in pixels
+ /* x = 0 -> left, x= max -> right, y = 0 -> up, y = max -> down */
   attribute vec2 a_position;
  
+  // Resolutions of the canvas, an vector of 2, x = width, y = height
   uniform vec2 u_resolution;
  
   // all shaders have a main function
@@ -18,7 +18,19 @@
     // gl_Position is a special variable a vertex shader
     // is responsible for setting
 
-    gl_Position = vec4(a_position,0,1);
+    // Normalize pixels into 0 to 1 (because we cannot go to (-1,1) immediately) 
+    vec2 zeroToOne = a_position / u_resolution;
+
+    // Normalize pixels from 0 to 1 t-> 0 to 2
+    vec2 zeroToTwo = zeroToOne * 2.0;
+
+    // Normalize pixles from 0 to 2, and then -1 to 1
+    vec2 clipSpaceVertex = zeroToTwo - 1.0;
+
+    // Normalize pixels so that y positive is down, and y = 0 is up
+    vec2 uprightClipSpaceVertex = clipSpaceVertex * vec2(1,-1);
+
+    gl_Position = vec4(uprightClipSpaceVertex,0,1);
   }
  
 </script>
