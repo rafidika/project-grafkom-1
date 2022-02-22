@@ -4,10 +4,12 @@ function main() {
   var canvasLeft = canvas.offsetLeft + canvas.clientLeft
   var canvasTop = canvas.offsetTop + canvas.clientTop
   var vertexClicked = null
+  var shapeList = []
   var vertexes = []
 
-  console.log(canvas.height)
-
+  /* for draw polygon*/
+  var newShape = null
+  var tempVertex = null
 
   /*Click Listeners*/
 
@@ -16,13 +18,19 @@ function main() {
   drawOrEditInput.addEventListener('change', (event) => {
     if (drawOrEditInput.value === "edit"){
       canvas.addEventListener('click', editClickHandler)
-
       canvas.addEventListener('mousemove', editMouseMoveHandler)
+
+      canvas.removeEventListener('click', drawPolygonClickHandler)
+      canvas.removeEventListener('mousemove', drawPolygonMouseMoveHandler)
+
+      newShape = null
     }
     else if (drawOrEditInput.value === "draw")
       {
-      canvas.removeEventListener('click', editClickHandler)
+      canvas.addEventListener('click', drawPolygonClickHandler)
+      canvas.addEventListener('mousemove', drawPolygonMouseMoveHandler)
 
+      canvas.removeEventListener('click', editClickHandler)
       canvas.removeEventListener('mousemove', editMouseMoveHandler)
     }
   })
@@ -75,13 +83,27 @@ function main() {
   //   600, 400, 
   // ]
 
-    vertexes = [
-    {x: 200, y: 400},
-    {x: 200, y: 200},
-    {x: 400, y: 100},
-    {x: 600, y: 200},
-    {x: 600, y: 400},
-  ];
+
+  shapeList = [
+    {
+      name: "polygon",
+      vertexes: [
+        {x: 200, y: 400},
+        {x: 200, y: 200},
+        {x: 400, y: 100},
+        {x: 600, y: 200},
+        {x: 600, y: 400},
+      ],
+    },
+    {
+      name: "polygon",
+      vertexes: [
+        {x: 0, y: 0},
+        {x: 100, y: 0},
+        {x:0, y:100}
+      ],
+    }
+  ]
 
 
   applyVertex() 
@@ -89,29 +111,31 @@ function main() {
   gl.useProgram(program);
   gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
 
-  drawArrayCount = polygonVertexes.length/2
-  drawScene(drawArrayCount)
+  drawScene()
 
   function editClickHandler(event){
     const vertexSize = 30
     var x = event.pageX - canvasLeft
     var y = event.pageY - canvasTop
-// 
-//     console.log(`X: ${x}, Y: ${y}`)
-//     console.log(vertexClicked)
-//     console.log(vertexes)
+
+    // console.log(`X: ${x}, Y: ${y}`)
+    // console.log(vertexClicked)
+    // console.log(shapeList)
 
     
     if (vertexClicked === null){
       var found = false
-      vertexes.forEach(function(vertex) {
-          if (y > vertex.y - vertexSize/2  && y < vertex.y + vertexSize /2
-              && x > vertex.x - vertexSize/2 && x < vertex.x + vertexSize/2) {
-              // alert('clicked an element');
-              vertexClicked = vertex
-              found = true
-          }
-      });
+      shapeList.forEach(function(shape) {
+        shape.vertexes.forEach(function(vertex) {
+            if (y > vertex.y - vertexSize/2  && y < vertex.y + vertexSize /2
+                && x > vertex.x - vertexSize/2 && x < vertex.x + vertexSize/2) {
+                // alert('clicked an element');
+                vertexClicked = vertex
+                found = true
+            }
+        });
+      })
+      
 
       if (found === false){
         vertexClicked = null
@@ -133,6 +157,54 @@ function main() {
     if (vertexClicked !== null){
         vertexClicked.x = x
         vertexClicked.y = y
+        updateVertex()
+        drawScene()
+    }
+  }
+
+  function drawPolygonClickHandler(event){
+    const vertexSize = 30
+    var x = event.pageX - canvasLeft
+    var y = event.pageY - canvasTop
+    
+
+    console.log(`X: ${x}, Y: ${y}`)
+    console.log(shapeList)
+    
+    if (newShape === null){
+      tempVertex = {x:x,y:y}
+      newShape = {name: "polygon", vertexes: [{x:x,y:y},tempVertex]}
+      shapeList.push(newShape)
+    }
+    else 
+    {
+      let firstVertex = newShape.vertexes[0]
+      let firstVertexClicked = false
+      if (y > firstVertex.y - vertexSize/2  && y < firstVertex.y + vertexSize /2
+          && x > firstVertex.x - vertexSize/2 && x < firstVertex.x + vertexSize/2) {
+          firstVertexClicked = true
+        }
+
+      if (firstVertexClicked){
+        newShape.vertexes.pop()
+        newShape = null
+      }
+      else{
+        tempVertex = {x:x,y:y}
+        newShape.vertexes.push(tempVertex)
+        
+      }
+      updateVertex()
+      drawScene()
+    }
+  }
+
+  function drawPolygonMouseMoveHandler(event) {
+    var x = event.pageX - canvasLeft
+    var y = event.pageY - canvasTop
+    if (newShape !== null){
+        tempVertex.x = x
+        tempVertex.y = y
         updateVertex()
         drawScene()
     }
@@ -168,12 +240,12 @@ function main() {
   }
 
   function applyVertex(){
-    polygonVertexes = polygonVertex(vertexes)
+    polygonVertexes = polygonVertex(shapeList)
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
   }
 
   function updateVertex(){
-    polygonVertexes = polygonVertex(vertexes)
+    polygonVertexes = polygonVertex(shapeList)
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
   }
 
@@ -206,7 +278,7 @@ function main() {
 
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
-    var count = drawArrayCount;
+    var count = polygonVertexes.length/2;
     gl.drawArrays(primitiveType, offset, count);
   }
 }
@@ -237,8 +309,28 @@ function main() {
 // 
 // }
 
+function polygonVertex(shapeList){
+  /*
+    shapeList is a list of shapes
 
-function polygonVertex(vertexes2D) {
+    shape is an object with name and vertexes attributes
+    name used can be either polygon, square, rectangle, etc.
+  */
+
+  result = []
+
+  for (var i = 0; i < shapeList.length; i++) {
+    if (shapeList[i].name === "polygon")
+      {
+        result = result.concat(polygonVertexPerShape(shapeList[i].vertexes))
+      }
+  }
+
+  return  result
+
+}
+
+function polygonVertexPerShape(vertexes2D) {
   /*
   vertexes2D: Array of Vertexes
   Vertexes = objects with x & y attributes
