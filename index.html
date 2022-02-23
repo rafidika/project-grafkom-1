@@ -4,10 +4,12 @@
  "></canvas>
 
 
-<select name="drawOrEdit" id="drawOrEdit">
-  <option value="draw">Draw</option>
-  <option selected="selected" value="edit">Edit</option>
-</select>
+<button type="button" id="draw_polygon">Draw Polygon</button>
+<button type="button" id="edit_vertex">Edit Vertex</button>
+<button type="button" id="color_polygon">Bucket Tool</button>
+<input type="color" id="color_input" value="#FF7F00">
+
+
 
 <button id="drawLine">Draw a Line!</button>
 
@@ -19,6 +21,9 @@
  
   // Resolutions of the canvas, an vector of 2, x = width, y = height
   uniform vec2 u_resolution;
+
+  varying vec4 v_color;
+  attribute vec4 a_color;
  
   // all shaders have a main function
   void main() {
@@ -39,6 +44,8 @@
     vec2 uprightClipSpaceVertex = clipSpaceVertex * vec2(1,-1);
 
     gl_Position = vec4(uprightClipSpaceVertex,0,1);
+
+    v_color = a_color;
   }
  
 </script>
@@ -48,15 +55,22 @@
   // fragment shaders don't have a default precision so we need
   // to pick one. mediump is a good default
   precision mediump float;
- 
+  
+  varying vec4 v_color;
+
+
   void main() {
     // gl_FragColor is a special variable a fragment shader
     // is responsible for setting
-    gl_FragColor = vec4(1, 1, 0, 1); // return reddish-purple
+//     gl_FragColor = vec4(1, 1, 0, 1); // return reddish-purple
+// 
+    gl_FragColor = v_color;
+    
   }
  
 </script>
-
-<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
-<script src="./line.js"></script>
-<script src="grafkom1.js"></script>
+<!-- 
+<script src="grafkom1.js"></script> -->
+<script src="setup.js"></script>
+<script src="model.js"></script>
+<script src="ui.js"></script>

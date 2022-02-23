@@ -6,6 +6,7 @@ function main() {
   var vertexClicked = null
   var shapeList = []
   var vertexes = []
+  var drawArraysCount
 
   /* for draw polygon*/
   var newShape = null
@@ -59,30 +60,10 @@ function main() {
   // Assign locations
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
   var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+  var colorLocation = gl.getAttribLocation(program, "a_color");
 
   // Create buffer 
   var positionBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-  // Fill up geometry
-//   var vertexes = [
-//     0, 0,
-//     0, 0.5,
-//     0.35, 0.7,
-//     0.7, 0.5,
-//     0.7, 0,
-//   ];
-// 
-//   for (var i = 0; i < vertexes.length; i++) {
-//     vertexes[i] = vertexes[i]*30
-//   }
-
-  // var vertexes = [
-  //   200, 400,
-  //   400, 100,
-  //   600, 400, 
-  // ]
-
 
   shapeList = [
     {
@@ -94,6 +75,7 @@ function main() {
         {x: 600, y: 200},
         {x: 600, y: 400},
       ],
+
     },
     {
       name: "polygon",
@@ -108,8 +90,12 @@ function main() {
 
   applyVertex() 
 
-  gl.useProgram(program);
-  gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
+
+  // Create a buffer for the colors.
+  var colorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  // Set the colors.
+  setColors(gl, drawArraysCount);
 
   drawScene()
 
@@ -154,6 +140,7 @@ function main() {
   function editMouseMoveHandler(event) {
     var x = event.pageX - canvasLeft
     var y = event.pageY - canvasTop
+
     if (vertexClicked !== null){
         vertexClicked.x = x
         vertexClicked.y = y
@@ -210,6 +197,74 @@ function main() {
     }
   }
 
+
+  function applyVertex(){
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    polygonVertexes = polygonVertex(shapeList)
+    drawArraysCount = polygonVertexes.length/2
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
+  }
+
+  function updateVertex(){
+
+    applyVertex()
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    setColors(gl, drawArraysCount);
+  }
+
+
+  //***Rendering***//
+  function drawScene() {
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Clear the canvas
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(program);
+    gl.enableVertexAttribArray(positionAttributeLocation);
+
+    // Bind the position buffer.
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+
+     
+    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+    var size = 2;          // 2 components per iteration
+    var type = gl.FLOAT;   // the data is 32bit floats
+    var normalize = false; // don't normalize the data
+    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+    var offset = 0;        // start at the beginning of the buffer
+    gl.vertexAttribPointer(
+        positionAttributeLocation, size, type, normalize, stride, offset)
+
+    gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
+
+    gl.enableVertexAttribArray(colorLocation);
+ 
+    // Bind the color buffer.
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+
+   
+     
+    // Tell the color attribute how to get data out of colorBuffer (ARRAY_BUFFER)
+    var size = 4;          // 4 components per iteration
+    var type = gl.FLOAT;   // the data is 32bit floats
+    var normalize = false; // don't normalize the data
+    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+    var offset = 0;        // start at the beginning of the buffer
+    gl.vertexAttribPointer(
+        colorLocation, size, type, normalize, stride, offset)
+
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = drawArraysCount;
+    gl.drawArrays(primitiveType, offset, count);
+  }
+}
+
+
   function createShader(gl, type, source) {
     var shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -238,50 +293,6 @@ function main() {
     console.log(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
   }
-
-  function applyVertex(){
-    polygonVertexes = polygonVertex(shapeList)
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
-  }
-
-  function updateVertex(){
-    polygonVertexes = polygonVertex(shapeList)
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(polygonVertexes), gl.STATIC_DRAW);
-  }
-
-
-  //***Rendering***//
-  function drawScene() {
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-    // Clear the canvas
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    // Tell it to use our program (pair of shaders)
-    gl.useProgram(program);
-    gl.enableVertexAttribArray(positionAttributeLocation);
-
-    // Bind the position buffer.
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-     
-    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    var size = 2;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
-    gl.vertexAttribPointer(
-        positionAttributeLocation, size, type, normalize, stride, offset)
-
-
-    var primitiveType = gl.TRIANGLES;
-    var offset = 0;
-    var count = polygonVertexes.length/2;
-    gl.drawArrays(primitiveType, offset, count);
-  }
-}
 
 // function polygonVertex(vertexes2D) {
 //   if (vertexes2D.length <= 4){
@@ -326,7 +337,7 @@ function polygonVertex(shapeList){
       }
   }
 
-  return  result
+  return result
 
 }
 
@@ -357,4 +368,32 @@ function polygonVertexPerShape(vertexes2D) {
   return polygonVertex
 }
 
+
+// Fill the buffer with colors for the 2 triangles
+// that make the rectangle.
+function setColors(gl, drawArraysCount) {
+  // Pick 2 random colors.
+  var r1 = 1;
+  var b1 = 1;
+  var g1 = 0;
+
+  color = [r1, b1, g1, 1]
+
+
+
+  colorVertexBuffer = []
+
+
+  for (var i = 0; i < drawArraysCount; i++) {
+    colorVertexBuffer = colorVertexBuffer.concat(color)
+  }
+
+
+
+  gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(
+        colorVertexBuffer),
+      gl.STATIC_DRAW);
+}
 main()
