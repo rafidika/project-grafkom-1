@@ -243,4 +243,3 @@ function hexToRgb(hex) {
   } : null;
 }
 
-

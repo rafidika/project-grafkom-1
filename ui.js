@@ -15,6 +15,8 @@ function setupPolygon() {
 	var drawPolygon = document.querySelector("#draw_polygon");
 	var editVertex = document.querySelector("#edit_vertex");
 	var colorPolygon = document.querySelector("#color_polygon");
+	var drawALine = document.querySelector("#drawLine");
+	var drawASquare = document.querySelector("#drawSquare");
 
 	drawPolygon.addEventListener("click", (event) => {
 		removeAllListeners()
@@ -33,6 +35,15 @@ function setupPolygon() {
 		canvas.addEventListener('click', colorPolygonClickHandler)
 	})
 
+	drawALine.addEventListener("click", (e) => {
+		drawLine();
+		rerender();
+	})
+
+	drawASquare.addEventListener("click", (e) => {
+		drawSquare();
+		rerender();
+	})
 
 	canvas.addEventListener('click', drawPolygonClickHandler)
 	canvas.addEventListener('mousemove', drawPolygonMouseMoveHandler)

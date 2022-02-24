@@ -21,10 +21,48 @@ shapeList = [
         {x: 100, y: 0},
         {x:0, y:100}
       ],
-    }
+    },
+    // {
+    //   name: "line",
+    //   vertexes: [
+    //     {x: 100, y: 100},
+    //     {x: 200, y: 100},
+    //     {x: 200, y: 99},
+    //     {x: 100, y: 99}
+    //   ],
+    //   color: "#000000"
+    // }
   ]
 
 rerender()
+
+function drawLine() {
+  let newLine = {
+    name: "line",
+    vertexes: [
+      {x: 100, y: 100},
+      {x: 200, y: 100},
+      {x: 200, y: 99},
+      {x: 100, y: 99}
+    ],
+    color: "#000000"
+  }
+  shapeList.push(newLine);
+}
+
+function drawSquare() {
+  let newSquare = {
+    name: "square",
+    vertexes: [
+      {x: 300, y: 300},
+      {x: 300, y: 500},
+      {x: 500, y: 500},
+      {x: 500, y: 300}
+    ],
+    color: "5A5A5A"
+  }
+  shapeList.push(newSquare);
+}
 
 
 function polygonVertexPerShape(vertexes2D) {
@@ -70,7 +108,15 @@ function polygonVertexPerShape(vertexes2D) {
     400, 399 is position 3
     */
 
-    return []
+    let polygonLine = []
+    let firstVertex = arrayOfVertexes[0]
+    for (let i = 2; i < arrayOfVertexes.length; i++) {
+      polygonLine.push(firstVertex.x, firstVertex.y);
+      polygonLine.push(arrayOfVertexes[i-1].x, arrayOfVertexes[i-1].y);
+      polygonLine.push(arrayOfVertexes[i].x,arrayOfVertexes[i].y);
+    }
+
+    return polygonLine;
 
   }
 
@@ -92,8 +138,15 @@ function polygonVertexPerShape(vertexes2D) {
     400, 401 is position 2
     400, 399 is position 3
     */
+    let polygonSquare = []
+    let firstVertex = arrayOfVertexes[0]
+    for (let i = 2; i < arrayOfVertexes.length; i++) {
+      polygonSquare.push(firstVertex.x, firstVertex.y);
+      polygonSquare.push(arrayOfVertexes[i-1].x, arrayOfVertexes[i-1].y);
+      polygonSquare.push(arrayOfVertexes[i].x,arrayOfVertexes[i].y);
+    }
 
-    return []
+    return polygonSquare;
   }
 
   function processRectangle(arrayOfVertexes) {
