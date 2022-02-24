@@ -47,6 +47,73 @@ function polygonVertexPerShape(vertexes2D) {
     polygonVertex.push(vertexes2D[i-1].x, vertexes2D[i-1].y)
     polygonVertex.push(vertexes2D[i].x, vertexes2D[i].y)
   }
-
   return polygonVertex
 }
+
+  function processLine(arrayOfVertexes) {
+    
+    /*
+    PARAM
+    arrayOfVertexes = Array of vertexes
+    vertexes = objewith x & y attributes
+
+    access example: arrayOfVertexes[0].x
+
+    RETURN
+    Array of points to be put in the position buffer
+
+    Return example:
+    [200, 150, 400, 401, 400, 399]
+
+    Where 200,150 is position 1
+    400, 401 is position 2
+    400, 399 is position 3
+    */
+
+    return []
+
+  }
+
+  function processSquare(arrayOfVertexes) {
+    /*
+    PARAM
+    arrayOfVertexes = Array of vertexes
+    vertexes = objewith x & y attributes
+
+    access example: arrayOfVertexes[0].x
+
+    RETURN
+    Array of points to be put in the position buffer
+
+    Return example:
+    [200, 150, 400, 401, 400, 399]
+
+    Where 200,150 is position 1
+    400, 401 is position 2
+    400, 399 is position 3
+    */
+
+    return []
+  }
+
+  function processRectangle(arrayOfVertexes) {
+    /*
+    PARAM
+    arrayOfVertexes = Array of vertexes
+    vertexes = objewith x & y attributes
+
+    access example: arrayOfVertexes[0].x
+
+    RETURN
+    Array of points to be put in the position buffer
+
+    Return example:
+    [200, 150, 400, 401, 400, 399]
+
+    Where 200,150 is position 1
+    400, 401 is position 2
+    400, 399 is position 3
+    */
+
+    return []
+  }

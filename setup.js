@@ -169,6 +169,17 @@ function processVertex(shapeList){
       {
         result = result.concat(polygonVertexPerShape(shapeList[i].vertexes))
       }
+
+    else if (shapeList[i].name === "line"){
+      result = result.concat(processLine(shapeList[i].vertexes))
+    }
+
+    else if (shapeList[i].name === "square"){
+      result = result.concat(processSquare(shapeList[i].vertexes))
+    }
+    else if (shapeList[i].name === "rectangle"){
+      result = result.concat(processRectangle(shapeList[i].vertexes))
+    }
   }
 
   return result
