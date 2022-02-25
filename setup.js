@@ -93,10 +93,41 @@ function setup() {
     gl.vertexAttribPointer(
         colorLocation, size, type, normalize, stride, offset)
 
-    var primitiveType = gl.TRIANGLES;
     var offset = 0;
-    var count = drawArraysCount;
-    gl.drawArrays(primitiveType, offset, count);
+
+    for (var i = 0; i < shapeList.length; i++) {
+      // shapeList[i]
+      
+      if (shapeList[i].name === "polygon"){
+        var primitiveType = gl.TRIANGLES;
+        var count = (shapeList[i].vertexes.length -2)*3
+        gl.drawArrays(primitiveType, offset, count);
+        offset = offset + count
+      }
+
+      else if (shapeList[i].name === "line"){
+        var primitiveType = gl.LINES;
+        var count = 2
+        gl.drawArrays(primitiveType, offset, count);
+        offset = offset + count
+      }
+
+      else if (shapeList[i].name === "square"){
+        var primitiveType = gl.TRIANGLES;
+        var count = 6
+        gl.drawArrays(primitiveType, offset, count);
+        offset = offset + count
+      }
+
+
+      // console.log(count)
+      
+    }
+
+    // var primitiveType = gl.TRIANGLES;
+    // var offset = 0;
+    // var count = drawArraysCount;
+    // gl.drawArrays(primitiveType, offset, count);
   }
 
   return {
@@ -205,16 +236,40 @@ function setColors(gl, drawArraysCount) {
 
   for (var i = 0; i < shapeList.length; i++) {
     var shapeColorArray = processColors(shapeList[i])
-    for (var j = 0;  j < (shapeList[i].vertexes.length - 2 )*3; j++) {
-        colorVertexBuffer = colorVertexBuffer.concat(shapeColorArray)
-      }  
+
+    for (var j = 0;  j < countLengthInVertexBuffer(shapeList[i]); j++) {
+      colorVertexBuffer = colorVertexBuffer.concat(shapeColorArray)
+    }
+
+    // console.log(countLengthInVertexBuffer(shapeList[i]))
+    
   }
+
+  // console.log(`colorVertexBuffer length = ${colorVertexBuffer.length}`)
 
   gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array(
         colorVertexBuffer),
       gl.STATIC_DRAW);
+}
+
+function countLengthInVertexBuffer(shape) {
+  if (shape.name === "polygon")
+    {
+      return polygonVertexPerShape(shape.vertexes).length/2
+    }
+
+  else if (shape.name === "line"){
+    return processLine(shape.vertexes).length/2
+  }
+
+  else if (shape.name === "square"){
+    return processSquare(shape.vertexes).length/2
+  }
+  else if (shape.name === "rectangle"){
+    return processRectangle(shape.vertexes).length/2
+  }
 }
 
 

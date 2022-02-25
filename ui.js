@@ -7,6 +7,7 @@ function setupPolygon() {
 
 	/* for edit vetex*/
 	var vertexClicked = null
+	var squareLineClicked = null
 
 	/* for draw polygon*/
 	  var newShape = null
@@ -95,6 +96,51 @@ function setupPolygon() {
 		    rerender()
 		    vertexClicked = null 
 		}
+
+		if (squareLineClicked === null){
+		  var found = false
+		  shapeList.forEach(function(shape) {
+		  	if (shape.name === "square"){
+		  		// console.log("Processing square")
+
+		  		for (var i = 1; i < shape.vertexes.length; i++) {
+		  			if (in_line(x,y, shape.vertexes[i-1].x, shape.vertexes[i].x, shape.vertexes[i-1].y, shape.vertexes[i].y) === true){
+		  				squareLineClicked = []
+		  				squareLineClicked[0] = shape.vertexes[i-1]
+		  				squareLineClicked[1] = shape.vertexes[i]
+		  				found = true
+		  				// console.log('squareLineClicked')
+		  			}
+		  		}
+		  		if (in_line(x,y, shape.vertexes[shape.vertexes.length-1].x, shape.vertexes[0].x, shape.vertexes[shape.vertexes.length-1].y, shape.vertexes[0].y) === true){
+		  				squareLineClicked = []
+		  				squareLineClicked[0] = shape.vertexes[shape.vertexes.length-1]
+		  				squareLineClicked[1] = shape.vertexes[0]
+		  				found = true
+		  				// console.log('squareLineClicked')
+		  		}
+		  	}
+		  })
+		  
+
+		  if (found === false){
+		    squareLineClicked = null
+		  }			
+		}
+
+		else{
+			if (squareLineClicked[0].x === squareLineClicked[1].x){
+				squareLineClicked[0].x = x
+				squareLineClicked[1].x = x
+			}
+
+			else if (squareLineClicked[0].y === squareLineClicked[1].y){
+				squareLineClicked[0].y = y
+				squareLineClicked[1].y = y
+			}
+			rerender()
+			squareLineClicked = null
+		}
 	}
 
 	function editMouseMoveHandler(event) {
@@ -105,6 +151,19 @@ function setupPolygon() {
 		    vertexClicked.x = x
 		    vertexClicked.y = y
 		    rerender()
+		}
+
+		if (squareLineClicked !== null){
+			if (squareLineClicked[0].x === squareLineClicked[1].x){
+				squareLineClicked[0].x = x
+				squareLineClicked[1].x = x
+			}
+
+			else if (squareLineClicked[0].y === squareLineClicked[1].y){
+				squareLineClicked[0].y = y
+				squareLineClicked[1].y = y
+			}
+			rerender()
 		}
 	}
 
@@ -173,9 +232,18 @@ function setupPolygon() {
 		var selectShape = null
 
 		shapeList.forEach(function(shape) {
-			if (ray_casting(cursorX, cursorY, shape) === true){
-				selectShape = shape
+			if (shape.name !== "line"){
+				if (ray_casting(cursorX, cursorY, shape) === true){
+					selectShape = shape
+				}
 			}
+			else{
+				if (select_line(cursorX, cursorY, shape) === true){
+					selectShape = shape
+				}
+			}
+
+			
 		  })
 
 		return selectShape
@@ -203,6 +271,78 @@ function setupPolygon() {
 
 
 	    return is_in;
+	}
+
+	function select_line(cursorX, cursorY, shape){
+	    var x = cursorX
+	    var y = cursorY
+
+	    var x1=shape.vertexes[0].x;
+        var x2=shape.vertexes[1].x;
+        var y1=shape.vertexes[0].y;
+        var y2=shape.vertexes[1].y;
+
+        /* Vertical Line */
+        if (x1 === x2){
+        	return x === x1 && ((y1 < y && y < y2) || (y2 < y && y < y1))
+        }
+
+        /* Horizontal Video */
+        if (y1 === y2){
+        	return y === y1 && ((x1 < x && x < x2) || (x2 < x && x < x1))
+        }
+
+        /* Formula of y = mx + c
+
+        m = y2-y1/x2-s1
+
+        c = y - mx
+        /*/
+
+        var m = (y2 - y1)/(x2 - x1)
+        var c = y2 - m*x2
+
+        if (y === (m*x + c)){
+        	return ((x1<x && x<x2 && y1<y && y < y2) || (x1>x && x>x2 && y1>y && y>y2))
+        }
+
+	    return false;
+	}
+
+	function in_line(cursorX, cursorY, x1 ,x2, y1, y2) {
+	    var x = cursorX
+	    var y = cursorY
+	    const vertexSize = 30
+
+        /* Vertical Line */
+        if (x1 === x2){
+        	// console.log("Found vertical")
+        	// console.log((x1 - vertexSize/2 < x && x < x1 + vertexSize/2) && ((y1 < y && y < y2) || (y2 < y && y < y1)))
+        	return (x1 - vertexSize/2 < x && x < x1 + vertexSize/2) && ((y1 < y && y < y2) || (y2 < y && y < y1))
+        }
+
+        /* Horizontal Line */
+        if (y1 === y2){
+        	// console.log("Found Horizontal")
+        	// console.log( (y1 - vertexSize/2 < y && y < y1 + vertexSize/2) && ((x1 < x && x < x2) || (x2 < x && x < x1)))
+        	return (y1 - vertexSize/2 < y && y < y1 + vertexSize/2) && ((x1 < x && x < x2) || (x2 < x && x < x1))
+        }
+
+        /* Formula of y = mx + c
+
+        m = y2-y1/x2-s1
+
+        c = y - mx
+        /*/
+
+        var m = (y2 - y1)/(x2 - x1)
+        var c = y2 - m*x2
+
+        if (y === (m*x + c)){
+        	return ((x1<x && x<x2 && y1<y && y < y2) || (x1>x && x>x2 && y1>y && y>y2))
+        }
+
+	    return false;
 	}
 }
 

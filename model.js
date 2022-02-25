@@ -22,16 +22,14 @@ shapeList = [
         {x:0, y:100}
       ],
     },
-    // {
-    //   name: "line",
-    //   vertexes: [
-    //     {x: 100, y: 100},
-    //     {x: 200, y: 100},
-    //     {x: 200, y: 99},
-    //     {x: 100, y: 99}
-    //   ],
-    //   color: "#000000"
-    // }
+    {
+      name: "line",
+      vertexes: [
+        {x: 100, y: 100},
+        {x: 200, y: 100},
+      ],
+      color: "#000000"
+    }
   ]
 
 rerender()
@@ -42,8 +40,6 @@ function drawLine() {
     vertexes: [
       {x: 100, y: 100},
       {x: 200, y: 100},
-      {x: 200, y: 99},
-      {x: 100, y: 99}
     ],
     color: "#000000"
   }
@@ -63,6 +59,8 @@ function drawSquare() {
   }
   shapeList.push(newSquare);
 }
+
+rerender()
 
 
 function polygonVertexPerShape(vertexes2D) {
@@ -108,14 +106,7 @@ function polygonVertexPerShape(vertexes2D) {
     400, 399 is position 3
     */
 
-    let polygonLine = []
-    let firstVertex = arrayOfVertexes[0]
-    for (let i = 2; i < arrayOfVertexes.length; i++) {
-      polygonLine.push(firstVertex.x, firstVertex.y);
-      polygonLine.push(arrayOfVertexes[i-1].x, arrayOfVertexes[i-1].y);
-      polygonLine.push(arrayOfVertexes[i].x,arrayOfVertexes[i].y);
-    }
-
+    let polygonLine = [arrayOfVertexes[0].x, arrayOfVertexes[0].y, arrayOfVertexes[1].x, arrayOfVertexes[1].y]
     return polygonLine;
 
   }
@@ -140,7 +131,7 @@ function polygonVertexPerShape(vertexes2D) {
     */
     let polygonSquare = []
     let firstVertex = arrayOfVertexes[0]
-    for (let i = 2; i < arrayOfVertexes.length; i++) {
+    for (let i = 2; i < 4; i++) {
       polygonSquare.push(firstVertex.x, firstVertex.y);
       polygonSquare.push(arrayOfVertexes[i-1].x, arrayOfVertexes[i-1].y);
       polygonSquare.push(arrayOfVertexes[i].x,arrayOfVertexes[i].y);
