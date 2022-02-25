@@ -298,3 +298,35 @@ function hexToRgb(hex) {
   } : null;
 }
 
+function loadFile() {
+  let [file] = document.getElementById("fileInput").files;
+  let fr = new FileReader();
+  fr.addEventListener("load", () => {
+    let obj = JSON.parse(fr.result);
+    // let formatted = JSON.stringify(result, null, 2);
+    resetShapeList();
+    for (const newShape in obj) {
+      addToShapeList(obj[newShape]);
+    }
+    rerender();
+  }, false);
+  fr.readAsText(file); 
+}
+
+function saveFile() {
+  let tempShapeList = {};
+  for (let i = 0; i < shapeList.length; i++) {
+    let name = `no${i}`;
+    tempShapeList[`${name}`] = shapeList[i];
+  }
+  const jsonData = JSON.stringify(tempShapeList);
+  download(jsonData,'file.json','text/plain');
+}
+
+function download(content, fileName, contentType) {
+  let a = document.createElement('a');
+  let file = new Blob([content], {type: contentType});
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
+}

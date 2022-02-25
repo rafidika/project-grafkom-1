@@ -18,6 +18,7 @@ function setupPolygon() {
 	var colorPolygon = document.querySelector("#color_polygon");
 	var drawALine = document.querySelector("#drawLine");
 	var drawASquare = document.querySelector("#drawSquare");
+	// var submitButton = document.querySelector("#loadButton");
 
 	drawPolygon.addEventListener("click", (event) => {
 		removeAllListeners()
@@ -45,6 +46,17 @@ function setupPolygon() {
 		drawSquare();
 		rerender();
 	})
+
+	// submitButton.addEventListener("click", (e) => {
+	// 	let files = document.getElementById('fileInput').files;
+	// 	let fr = new FileReader();
+	// 	fr.onload = () => {
+	// 		let result = JSON.parse(fr.result);
+	// 		// let formatted = JSON.stringify(result, null, 2);
+	// 		console.log(result);
+	// 	}
+	// 	fr.readAsText(files);
+	// })
 
 	canvas.addEventListener('click', drawPolygonClickHandler)
 	canvas.addEventListener('mousemove', drawPolygonMouseMoveHandler)

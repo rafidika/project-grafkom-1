@@ -55,7 +55,7 @@ function drawSquare() {
       {x: 500, y: 500},
       {x: 500, y: 300}
     ],
-    color: "5A5A5A"
+    color: "#5A5A5A"
   }
   shapeList.push(newSquare);
 }
@@ -160,4 +160,12 @@ function polygonVertexPerShape(vertexes2D) {
     */
 
     return []
+  }
+
+  function resetShapeList() {
+    shapeList = [];
+  }
+
+  function addToShapeList(obj) {
+    shapeList.push(obj);
   }
