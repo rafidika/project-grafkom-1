@@ -34,7 +34,21 @@ shapeList = [
 
 rerender()
 
-function drawLine() {
+function drawRectangle(){
+  let newRectangle = {
+    name:"rectangle",
+    vertexes:[
+      {x: 100, y:100},
+      {x: 100, y:200},
+      {x: 200, y: 200},
+      {x:200, y:100}
+    ],
+    color: "#666666"
+  }
+  shapeList.push(newRectangle);
+}
+
+/*function drawLine() {
   let newLine = {
     name: "line",
     vertexes: [
@@ -44,7 +58,7 @@ function drawLine() {
     color: "#000000"
   }
   shapeList.push(newLine);
-}
+}*/
 
 function drawSquare() {
   let newSquare = {
@@ -158,8 +172,15 @@ function polygonVertexPerShape(vertexes2D) {
     400, 401 is position 2
     400, 399 is position 3
     */
-
-    return []
+   let polygonRectangle = [];
+   let firstVertex = arrayOfVertexes[0];
+   for(let i = 2; i<4; i++){
+    polygonRectangle.push(firstVertex.x, firstVertex.y);
+    polygonRectangle.push(arrayOfVertexes[i-1].x, arrayOfVertexes[i-1].y);
+    polygonRectangle.push(arrayOfVertexes[i].x,arrayOfVertexes[i].y);
+   }
+   console.log(polygonRectangle)
+    return polygonRectangle;
   }
 
   function resetShapeList() {

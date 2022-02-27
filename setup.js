@@ -119,6 +119,13 @@ function setup() {
         offset = offset + count
       }
 
+      else if (shapeList[i].name === "rectangle"){
+        var primitiveType = gl.TRIANGLES;
+        var count = 6;
+        gl.drawArrays(primitiveType, offset, count);
+          offset = offset + count;
+      }
+
 
       // console.log(count)
       

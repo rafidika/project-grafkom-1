@@ -1,37 +1,60 @@
- <canvas id="c" width="800" height="500" style="
-  border: 5px solid black;
-  margin: 0;
- "></canvas>
-
-
-<button type="button" id="draw_polygon">Draw Polygon</button>
-<button type="button" id="edit_vertex">Edit Vertex</button>
-<button type="button" id="color_polygon">Bucket Tool</button>
-<input type="color" id="color_input" value="#FF7F00">
-
-
-
-<button id="drawLine">Draw Line</button>
-<button id="drawSquare">Draw Square</button>
-
-<button id="saveButton" onclick="saveFile()">Save</button>
-<input type="file" id="fileInput" accept=".json" onchange="loadFile()" required/>
-
- <script id="vertex-shader-2d" type="notjs">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="canvas-container">
+     
  
+    <canvas id="c" width="800" height="500" style="
+    border: 5px solid black;
+    margin: 0;
+    "></canvas>
+  </div>
+
+  <div class = "controller" style = "display:block">
+    <table>
+      <tr>
+        <td><button type="button"  id="draw_polygon">Draw Polygon</button></td>
+        <td><button type="button"  id="draw_rectangle">Draw Rectangle</button></td>
+        <td><button type="button"  id="draw_square">Draw Square</button></td>
+        <td><button type="button"  id="draw_line">Draw Line</button></td>
+      </tr>
+      <tr>
+        <td><button type="button" value="Polygon" id="edit_polygon">Edit Polygon</button></td>
+        <td><button type="button" value="Rectangle" id="edit_rectangle">Edit Rectangle</button></td>
+        <td><button type="button" value="Square" id="edit_square">Edit Square</button></td>
+        <td><button type="button" value="Line" id="edit_line">Edit Line</button></td>
+      </tr>
+      <tr>
+        <td><button type="button" id="color_polygon">Bucket Tool</button></td>
+        <td style="display:flex; justify-content:center"><input type="color" id="color_input" value="#FF7F00"></td>
+        <td> <button id="saveButton" onclick="saveFile()">Save</button></td>
+        <td><input type="file" id="fileInput" accept=".json" onchange="loadFile()" required/></td>
+      </tr>
+    </table>
+  </div>
+</body>
+
+<script id="vertex-shader-2d" type="notjs">
+
   // an attribute will receive data from a buffer, in pixels
- /* x = 0 -> left, x= max -> right, y = 0 -> up, y = max -> down */
+  /* x = 0 -> left, x= max -> right, y = 0 -> up, y = max -> down */
   attribute vec2 a_position;
- 
+
   // Resolutions of the canvas, an vector of 2, x = width, y = height
   uniform vec2 u_resolution;
 
   varying vec4 v_color;
   attribute vec4 a_color;
- 
+
   // all shaders have a main function
   void main() {
- 
+
     // gl_Position is a special variable a vertex shader
     // is responsible for setting
 
@@ -51,11 +74,11 @@
 
     v_color = a_color;
   }
- 
-</script>
- 
-<script id="fragment-shader-2d" type="notjs">
- 
+
+  </script>
+
+  <script id="fragment-shader-2d" type="notjs">
+
   // fragment shaders don't have a default precision so we need
   // to pick one. mediump is a good default
   precision mediump float;
@@ -66,15 +89,16 @@
   void main() {
     // gl_FragColor is a special variable a fragment shader
     // is responsible for setting
-//     gl_FragColor = vec4(1, 1, 0, 1); // return reddish-purple
-// 
+  //     gl_FragColor = vec4(1, 1, 0, 1); // return reddish-purple
+  // 
     gl_FragColor = v_color;
     
   }
- 
-</script>
-<!-- 
-<script src="grafkom1.js"></script> -->
-<script src="setup.js"></script>
-<script src="model.js"></script>
-<script src="ui.js"></script>
+
+  </script>
+  <!-- 
+  <script src="grafkom1.js"></script> -->
+  <script src="setup.js"></script>
+  <script src="model.js"></script>
+  <script src="ui.js"></script>
+</html>
