@@ -7,37 +7,96 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="canvas-container">
-     
- 
-    <canvas id="c" width="800" height="500" style="
-    border: 5px solid black;
-    margin: 0;
-    "></canvas>
+  <div style = "display:flex">
+    <div class="canvas-container">
+      <canvas id="c" width="800" height="500" style="
+      border: 5px solid black;
+      margin: 0;
+      "></canvas>
+      <div class = "controller" style = "display:block">
+        <table>
+          <tr>
+            <td><button type="button"  id="draw_polygon">Draw Polygon</button></td>
+            <td><button type="button"  id="draw_rectangle">Draw Rectangle</button></td>
+            <td><button type="button"  id="draw_square">Draw Square</button></td>
+            <td><button type="button"  id="draw_line">Draw Line</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" value="Polygon" id="edit_polygon">Edit Polygon</button></td>
+            <td><button type="button" value="Rectangle" id="edit_rectangle">Edit Rectangle</button></td>
+            <td><button type="button" value="Square" id="edit_square">Edit Square</button></td>
+            <td><button type="button" value="Line" id="edit_line">Edit Line</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" id="color_polygon">Bucket Tool</button></td>
+            <td style="display:flex; justify-content:center"><input type="color" id="color_input" value="#FF7F00"></td>
+            <td> <button id="saveButton" onclick="saveFile()">Save</button></td>
+            <td><input type="file" id="fileInput" accept=".json" onchange="loadFile()" required/></td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+    <div class = "user-manual" style="padding-left: 5%;">
+      <H2>Helper :)</H2>
+        <h3>Menggambar Garis</h3>
+                <p> 1. Klik tombol Line <br/>
+                    2. Pilih dua koordinat pada canvas
+                </p>
+
+                <h3>Mengubah Panjang Garis</h3>
+                <p> 1. Klik Tombol "Edit Line" <br/>
+                    2. Klik salah satu titik ujung garis <br/>
+                    3. Klik titik baru untuk memindahkan titik yang di klik
+                </p>
+                
+                <h3>Menggambar Persegi Panjang</h3>
+                <p>
+                  1. Klik tombol "Draw Rectangle" sesuai keinginan<br/>
+                  2. Pilih 2 titik sebagai salah satu sisinya <br/>
+                  3. Sesuaikan ukuran persegi panjang yang diinginkan kemudian klik
+                </p>
+
+                <h3>Mengubah Panjang Sisi Persegi Panjang</h3>
+                <p> 1. Klik tombol "Edit Rectangle" <br/>
+                    2. Klik salah satu titik persegi panjang pada canvas <br />
+                    3. Geser sesuai keinginan kemudian klik
+                </p>
+                
+                <h3>Menggambar Polygon</h3>
+                <p>
+                    1. Klik tombol "Draw Polygon"<br/>
+                    2. Pilih titik-titik sudut secara berurutan searah ataupun berlawanan jarum jam. <br/>
+                    3. Selesai jika mengklik titik sudut pertama.
+                </p>
+
+                <h3>Mengubah Bentuk Polygon</h3>
+                <p> 1. Klik tombol "Edit Polygon" <br/>
+                    2. Klik salah satu titik polygon pada canvas <br />
+                    3. Pindahkan ke tempat yang diinginkan kemudian klik.
+                </p>
+                
+                <h3>Mengganti Warna Objek</h3>
+                <p>
+                    1. Klik tombol "Bucket Tool<br/>
+                    2. Pilih warna yang diinginkan<br/>
+                    3. Klik objek yang ingin di ganti warnanya
+                </p>
+
+                <h3>Menyimpan Gambar</h3>
+                <p>
+                    1. Klik tombol 'Save'
+                </p>
+
+                <h3>Memuat Gambar</h3>
+                <p>
+                   1. Klik tombol "Choose File" <br/>
+                   2. Pilih file yang ingin di-load kemudian klik "open" atau tekan enter.
+                </p>
+    </div>
   </div>
 
-  <div class = "controller" style = "display:block">
-    <table>
-      <tr>
-        <td><button type="button"  id="draw_polygon">Draw Polygon</button></td>
-        <td><button type="button"  id="draw_rectangle">Draw Rectangle</button></td>
-        <td><button type="button"  id="draw_square">Draw Square</button></td>
-        <td><button type="button"  id="draw_line">Draw Line</button></td>
-      </tr>
-      <tr>
-        <td><button type="button" value="Polygon" id="edit_polygon">Edit Polygon</button></td>
-        <td><button type="button" value="Rectangle" id="edit_rectangle">Edit Rectangle</button></td>
-        <td><button type="button" value="Square" id="edit_square">Edit Square</button></td>
-        <td><button type="button" value="Line" id="edit_line">Edit Line</button></td>
-      </tr>
-      <tr>
-        <td><button type="button" id="color_polygon">Bucket Tool</button></td>
-        <td style="display:flex; justify-content:center"><input type="color" id="color_input" value="#FF7F00"></td>
-        <td> <button id="saveButton" onclick="saveFile()">Save</button></td>
-        <td><input type="file" id="fileInput" accept=".json" onchange="loadFile()" required/></td>
-      </tr>
-    </table>
-  </div>
+  
 </body>
 
 <script id="vertex-shader-2d" type="notjs">

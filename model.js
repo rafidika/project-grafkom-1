@@ -179,7 +179,6 @@ function polygonVertexPerShape(vertexes2D) {
     polygonRectangle.push(arrayOfVertexes[i-1].x, arrayOfVertexes[i-1].y);
     polygonRectangle.push(arrayOfVertexes[i].x,arrayOfVertexes[i].y);
    }
-   console.log(polygonRectangle)
     return polygonRectangle;
   }
 

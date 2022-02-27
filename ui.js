@@ -233,8 +233,6 @@ function setupPolygon() {
 					newVertex2.x = x1 -x2 + newVertex1.x;
 					newVertex2.y = y1 - y2 + newVertex1.y;
 				}
-
-				numOfVertices = 0;
 				
 			}
 			else if (x1 == x2){
@@ -254,7 +252,10 @@ function setupPolygon() {
 			newRectangle.vertexes[2] = newVertex1;
 			newRectangle.vertexes[3] = newVertex2;
 			rerender()
+			numOfVertices = 0;
 			newRectangle = null;
+			newVertex1 = {x:-1, y:-1};
+			newVertex2 = {x:-1, y:-1};
 		}
 		else if (numOfVertices == 1){
 			newRectangle.vertexes[numOfVertices] = {x:x, y:y}
