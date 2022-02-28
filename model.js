@@ -48,7 +48,7 @@ function drawRectangle(){
   shapeList.push(newRectangle);
 }
 
-/*function drawLine() {
+function drawLine() {
   let newLine = {
     name: "line",
     vertexes: [
@@ -58,7 +58,7 @@ function drawRectangle(){
     color: "#000000"
   }
   shapeList.push(newLine);
-}*/
+}
 
 function drawSquare() {
   let newSquare = {
