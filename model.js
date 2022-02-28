@@ -2,34 +2,6 @@ var shapeList = []
 
 
 shapeList = [
-    {
-      name: "polygon",
-      vertexes: [
-        {x: 200, y: 400},
-        {x: 200, y: 200},
-        {x: 400, y: 100},
-        {x: 600, y: 200},
-        {x: 600, y: 400},
-      ],
-      color: "#FFFF00"
-
-    },
-    {
-      name: "polygon",
-      vertexes: [
-        {x: 0, y: 0},
-        {x: 100, y: 0},
-        {x:0, y:100}
-      ],
-    },
-    {
-      name: "line",
-      vertexes: [
-        {x: 100, y: 100},
-        {x: 200, y: 100},
-      ],
-      color: "#000000"
-    }
   ]
 
 rerender()
